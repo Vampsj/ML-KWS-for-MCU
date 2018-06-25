@@ -389,7 +389,6 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   first_relu = tf.nn.relu(first_conv)
 
   # First DNN Layer
-  # Ops of InnerProducts in FC:
   if is_training:
     first_dropout = tf.nn.dropout(first_relu, dropout_prob)
   else:
@@ -438,6 +437,8 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
     final_fc_input = second_fc
   # 出力の次元はラベルの次元に一致させ
   label_count = model_settings['label_count']
+  print("label count:")
+  print(label_count)
   final_fc_weights = tf.Variable(
       tf.truncated_normal(
           [second_fc_output_channels, label_count], stddev=0.01))
