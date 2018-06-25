@@ -326,7 +326,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
           v
       [BiasAdd]<-(bias)
           v
-        [Relu]
+        [Relu] -> Linear ?
           v
       [MatMul]<-(weights)
           v
@@ -374,10 +374,18 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
           [first_filter_height, first_filter_width, 1, first_filter_count],
           stddev=0.01))
   first_bias = tf.Variable(tf.zeros([first_filter_count]))
+  # Why stride x first?
+  # Operations of inner product in CNN is:
   first_conv = tf.nn.conv2d(fingerprint_4d, first_weights, [
-      1, first_filter_stride_y, first_filter_stride_x, 1
+      1, first_filter_stride_x, first_filter_stride_y, 1
   ], 'VALID') + first_bias
+
+  # Linear
+  # Some linear approximation
   first_relu = tf.nn.relu(first_conv)
+
+  # First DNN Layer
+  # Ops of InnerProducts in FC:
   if is_training:
     first_dropout = tf.nn.dropout(first_relu, dropout_prob)
   else:
@@ -398,20 +406,26 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
           [first_conv_element_count, first_fc_output_channels], stddev=0.01))
   first_fc_bias = tf.Variable(tf.zeros([first_fc_output_channels]))
   first_fc = tf.matmul(flattened_first_conv, first_fc_weights) + first_fc_bias
+
+  # Second DNN Layer
   if is_training:
     second_fc_input = tf.nn.dropout(first_fc, dropout_prob)
   else:
     second_fc_input = first_fc
+
   second_fc_output_channels = 128
   second_fc_weights = tf.Variable(
       tf.truncated_normal(
           [first_fc_output_channels, second_fc_output_channels], stddev=0.01))
   second_fc_bias = tf.Variable(tf.zeros([second_fc_output_channels]))
   second_fc = tf.matmul(second_fc_input, second_fc_weights) + second_fc_bias
+
+  # Last FC Layer to softmax
   if is_training:
     final_fc_input = tf.nn.dropout(second_fc, dropout_prob)
   else:
     final_fc_input = second_fc
+  # 出力の次元はラベルの次元に一致させ
   label_count = model_settings['label_count']
   final_fc_weights = tf.Variable(
       tf.truncated_normal(
