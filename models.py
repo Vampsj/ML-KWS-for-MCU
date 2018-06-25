@@ -1,3 +1,4 @@
+# coding: UTF-8
 # Copyright 2017 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,12 +45,12 @@ def prepare_model_settings(label_count, sample_rate, clip_duration_ms,
   """Calculates common settings needed for all models.
 
   Args:
-    label_count: How many classes are to be recognized.
-    sample_rate: Number of audio samples per second.
-    clip_duration_ms: Length of each audio clip to be analyzed.
-    window_size_ms: Duration of frequency analysis window.
-    window_stride_ms: How far to move in time between frequency windows.
-    dct_coefficient_count: Number of frequency bins to use for analysis.
+    label_count: How many classes are to be recognized.　　　　　　　　　    ラベル個数をカウント
+    sample_rate: Number of audio samples per second.　　　　　　　　　　　   秒ごとに音声サンプルの個数
+    clip_duration_ms: Length of each audio clip to be analyzed.　　　　    分析する音声クリップの長さ
+    window_size_ms: Duration of frequency analysis window.                freg分析窓の期間長
+    window_stride_ms: How far to move in time between frequency windows.　どのくらい移動するか
+    dct_coefficient_count: Number of frequency bins to use for analysis.　分析に使うfreqビンの個数
 
   Returns:
     Dictionary containing common settings.
@@ -315,6 +316,8 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   'Convolutional Neural Networks for Small-footprint Keyword Spotting' paper:
   http://www.isca-speech.org/archive/interspeech_2015/papers/i15_1478.pdf
 
+  conv [m=32, r=8, n=186, s=1, v=4] -> linear -> dnn -> dnn -> softmax
+
   Here's the layout of the graph:
 
   (fingerprint_input)
@@ -355,15 +358,17 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   """
   if is_training:
     dropout_prob = tf.placeholder(tf.float32, name='dropout_prob')
+
   input_frequency_size = model_settings['dct_coefficient_count']
   input_time_size = model_settings['spectrogram_length']
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
-  first_filter_width = 8
-  first_filter_height = input_time_size
-  first_filter_count = 186
+  first_filter_width = 8 # r in paper, local time-frequency patch of size (m x r)
+  first_filter_height = input_time_size # maybe represent m which is 32
+  first_filter_count = 186 # n feature maps
   first_filter_stride_x = 1
-  first_filter_stride_y = 1
+  # first_filter_stride_y = 1
+  first_filter_stride_y = 4
   first_weights = tf.Variable(
       tf.truncated_normal(
           [first_filter_height, first_filter_width, 1, first_filter_count],
