@@ -361,6 +361,8 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
 
   input_frequency_size = model_settings['dct_coefficient_count']
   input_time_size = model_settings['spectrogram_length']
+  print("input frequency size")
+  print(input_frequency_size)
   # [batch, height, width, channels]
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
@@ -443,7 +445,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
       tf.truncated_normal(
           [second_fc_output_channels, label_count], stddev=0.01))
   final_fc_bias = tf.Variable(tf.zeros([label_count]))
-  # #InnerProd = 128*128*label_count
+  # #InnerProd = 128*128*label_count = 128*128*12
   final_fc = tf.matmul(final_fc_input, final_fc_weights) + final_fc_bias
   if is_training:
     return final_fc, dropout_prob

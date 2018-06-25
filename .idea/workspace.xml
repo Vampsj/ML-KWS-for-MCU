@@ -25,10 +25,31 @@
       <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4251">
-              <caret line="172" column="17" selection-start-line="172" selection-start-column="17" selection-end-line="172" selection-end-column="17" />
+            <state relative-caret-position="393">
+              <caret line="112" column="41" selection-start-line="112" selection-start-column="41" selection-end-line="112" selection-end-column="41" />
               <folding>
                 <element signature="n#!!doc" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="380">
+              <caret line="364" column="29" lean-forward="true" selection-start-line="364" selection-start-column="29" selection-end-line="364" selection-end-column="29" />
+              <folding>
+                <element signature="n#!!doc" />
+                <element signature="e#877#933#1" />
+                <element signature="e#7193#8387#0" />
+                <element signature="e#8463#12185#0" />
+                <element signature="e#16444#23624#0" />
+                <element signature="e#30044#31382#0" />
+                <element signature="e#31499#32850#0" />
+                <element signature="e#32902#35329#0" />
+                <element signature="e#35444#37314#0" />
+                <element signature="e#37443#41257#0" />
               </folding>
             </state>
           </provider>
@@ -37,26 +58,8 @@
       <file leaf-file-name="input_data.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/input_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2047" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="440" column="19" selection-start-line="440" selection-start-column="19" selection-end-line="440" selection-end-column="19" />
-              <folding>
-                <element signature="n#!!doc" />
-                <element signature="e#877#933#1" />
-                <element signature="e#7193#8387#0" />
-                <element signature="e#16444#23624#0" />
-                <element signature="e#30044#31382#0" />
-                <element signature="e#31499#32850#0" />
-                <element signature="e#32902#35329#0" />
-                <element signature="e#35444#37314#0" />
-                <element signature="e#37443#41257#0" />
-              </folding>
+            <state relative-caret-position="612">
+              <caret line="56" column="5" selection-start-line="56" selection-start-column="5" selection-end-line="56" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -86,6 +89,11 @@
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>softmax</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -212,16 +220,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4251">
-          <caret line="172" column="17" selection-start-line="172" selection-start-column="17" selection-end-line="172" selection-end-column="17" />
-          <folding>
-            <element signature="n#!!doc" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/quant_models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
@@ -234,17 +232,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/input_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2047" />
+        <state relative-caret-position="612">
+          <caret line="56" column="5" selection-start-line="56" selection-start-column="5" selection-end-line="56" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="393">
+          <caret line="112" column="41" selection-start-line="112" selection-start-column="41" selection-end-line="112" selection-end-column="41" />
+          <folding>
+            <element signature="n#!!doc" />
+          </folding>
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="440" column="19" selection-start-line="440" selection-start-column="19" selection-end-line="440" selection-end-column="19" />
+        <state relative-caret-position="380">
+          <caret line="364" column="29" lean-forward="true" selection-start-line="364" selection-start-column="29" selection-end-line="364" selection-end-column="29" />
           <folding>
             <element signature="n#!!doc" />
             <element signature="e#877#933#1" />
             <element signature="e#7193#8387#0" />
+            <element signature="e#8463#12185#0" />
             <element signature="e#16444#23624#0" />
             <element signature="e#30044#31382#0" />
             <element signature="e#31499#32850#0" />
