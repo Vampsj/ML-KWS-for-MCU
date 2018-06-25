@@ -368,7 +368,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   first_filter_height = input_time_size # maybe represent m which is 32
 
   print("input time size:\n")
-  print(first_filter_height.eval())
+  print(first_filter_height)
 
   first_filter_count = 186 # n feature maps
   first_filter_stride_x = 1
