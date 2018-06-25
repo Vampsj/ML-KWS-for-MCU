@@ -361,21 +361,28 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
 
   input_frequency_size = model_settings['dct_coefficient_count']
   input_time_size = model_settings['spectrogram_length']
+  # [batch, height, width, channels]
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
   first_filter_width = 8 # r in paper, local time-frequency patch of size (m x r)
   first_filter_height = input_time_size # maybe represent m which is 32
+
+  print("input time size:\n")
+  print(first_filter_height.eval())
+
   first_filter_count = 186 # n feature maps
   first_filter_stride_x = 1
   # first_filter_stride_y = 1
   first_filter_stride_y = 4
+  # first_weights: [input_time_size(32), 8, 1, 186] -> [filter_height, filter_width, in_channels, out_channels]
   first_weights = tf.Variable(
       tf.truncated_normal(
           [first_filter_height, first_filter_width, 1, first_filter_count],
           stddev=0.01))
+  # first bias: [186]
   first_bias = tf.Variable(tf.zeros([first_filter_count]))
   # Why stride x first?
-  # Operations of inner product in CNN is:
+  # conv2d(Data, Filter, [stride])  Operations of inner product in CNN is:
   first_conv = tf.nn.conv2d(fingerprint_4d, first_weights, [
       1, first_filter_stride_x, first_filter_stride_y, 1
   ], 'VALID') + first_bias
@@ -390,6 +397,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
     first_dropout = tf.nn.dropout(first_relu, dropout_prob)
   else:
     first_dropout = first_relu
+
   first_conv_output_width = math.floor(
       (input_frequency_size - first_filter_width + first_filter_stride_x) /
       first_filter_stride_x)
@@ -398,13 +406,18 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
       first_filter_stride_y)
   first_conv_element_count = int(
       first_conv_output_width * first_conv_output_height * first_filter_count)
+  # flatten the convolution results
+
   flattened_first_conv = tf.reshape(first_dropout,
                                     [-1, first_conv_element_count])
   first_fc_output_channels = 128
+  # fc_1st_W: [count, 128]
   first_fc_weights = tf.Variable(
       tf.truncated_normal(
           [first_conv_element_count, first_fc_output_channels], stddev=0.01))
+  # fc_1st_b: [128]
   first_fc_bias = tf.Variable(tf.zeros([first_fc_output_channels]))
+  # #InnerProd = count*count*128
   first_fc = tf.matmul(flattened_first_conv, first_fc_weights) + first_fc_bias
 
   # Second DNN Layer
@@ -418,9 +431,10 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
       tf.truncated_normal(
           [first_fc_output_channels, second_fc_output_channels], stddev=0.01))
   second_fc_bias = tf.Variable(tf.zeros([second_fc_output_channels]))
+  # #InnerProd = 128*128*128
   second_fc = tf.matmul(second_fc_input, second_fc_weights) + second_fc_bias
 
-  # Last FC Layer to softmax
+  # Last FC Layer to logits
   if is_training:
     final_fc_input = tf.nn.dropout(second_fc, dropout_prob)
   else:
@@ -431,6 +445,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
       tf.truncated_normal(
           [second_fc_output_channels, label_count], stddev=0.01))
   final_fc_bias = tf.Variable(tf.zeros([label_count]))
+  # #InnerProd = 128*128*label_count
   final_fc = tf.matmul(final_fc_input, final_fc_weights) + final_fc_bias
   if is_training:
     return final_fc, dropout_prob
