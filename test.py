@@ -26,6 +26,7 @@ from __future__ import print_function
 import argparse
 import os.path
 import sys
+import time
 
 import tensorflow as tf
 import input_data
@@ -166,10 +167,13 @@ def run_inference(wanted_words, sample_rate, clip_duration_ms,
 def main(_):
 
   # Create the model, load weights from checkpoint and run on train/val/test
+  time_start = time.time()
   run_inference(FLAGS.wanted_words, FLAGS.sample_rate,
       FLAGS.clip_duration_ms, FLAGS.window_size_ms,
       FLAGS.window_stride_ms, FLAGS.dct_coefficient_count,
       FLAGS.model_architecture, FLAGS.model_size_info)
+  time_end = time.time()
+  print(time_end - time_start)
 
 
 if __name__ == '__main__':
