@@ -65,19 +65,6 @@ def prepare_model_settings(label_count, sample_rate, clip_duration_ms,
     spectrogram_length = 1 + int(length_minus_window / window_stride_samples)
   fingerprint_size = dct_coefficient_count * spectrogram_length
 
-  print("desired sample->windowsizesample->windowstridesmaple->lengthminuswindow->spectrogramlength")
-  print(desired_samples)
-  print(";")
-  print(window_size_samples)
-  print(";")
-  print(window_stride_samples)
-  print(";")
-  print(length_minus_window)
-  print(";")
-  print(spectrogram_length)
-  print(";")
-  print(window_size_ms)
-  print(clip_duration_ms)
   return {
       'desired_samples': desired_samples,
       'window_size_samples': window_size_samples,
@@ -379,7 +366,8 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
   first_filter_width = 8 # r in paper, local time-frequency patch of size (m x r)
-  first_filter_height = input_time_size # maybe represent m which is 32 but here is 98
+  # first_filter_height = input_time_size # maybe represent m which is 32 but here is 98
+  first_filter_height = 32
 
   first_filter_count = 186 # n feature maps
   first_filter_stride_x = 1

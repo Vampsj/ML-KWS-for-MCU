@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0552cdb8-07a7-46de-9768-cb261ea5ea6d" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
-    </list>
+    <list default="true" id="0552cdb8-07a7-46de-9768-cb261ea5ea6d" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,10 +20,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
+            <state relative-caret-position="4964">
               <caret line="378" column="23" selection-start-line="378" selection-start-column="9" selection-end-line="378" selection-end-column="23" />
               <folding>
                 <element signature="n#!!doc" />
@@ -35,14 +33,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="57" column="42" selection-start-line="57" selection-start-column="42" selection-end-line="57" selection-end-column="42" />
+            <state relative-caret-position="384">
+              <caret line="75" column="12" lean-forward="true" selection-start-line="75" selection-start-column="12" selection-end-line="75" selection-end-column="12" />
               <folding>
                 <element signature="n#!!doc" />
                 <element signature="e#877#933#1" />
+                <element signature="e#3130#6801#0" />
                 <element signature="e#7193#8387#0" />
                 <element signature="e#8463#12185#0" />
                 <element signature="e#16444#23624#0" />
@@ -104,6 +103,7 @@
     <findStrings>
       <find>softmax</find>
       <find>clip_duration_ms</find>
+      <find>window_size_ms</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -242,25 +242,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="57" column="42" selection-start-line="57" selection-start-column="42" selection-end-line="57" selection-end-column="42" />
-          <folding>
-            <element signature="n#!!doc" />
-            <element signature="e#877#933#1" />
-            <element signature="e#7193#8387#0" />
-            <element signature="e#8463#12185#0" />
-            <element signature="e#16444#23624#0" />
-            <element signature="e#30044#31382#0" />
-            <element signature="e#31499#32850#0" />
-            <element signature="e#32902#35329#0" />
-            <element signature="e#35444#37314#0" />
-            <element signature="e#37443#41257#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/input_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="111">
@@ -277,11 +258,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
+        <state relative-caret-position="4964">
           <caret line="378" column="23" selection-start-line="378" selection-start-column="9" selection-end-line="378" selection-end-column="23" />
           <folding>
             <element signature="n#!!doc" />
             <element signature="e#847#3109#1" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="384">
+          <caret line="75" column="12" lean-forward="true" selection-start-line="75" selection-start-column="12" selection-end-line="75" selection-end-column="12" />
+          <folding>
+            <element signature="n#!!doc" />
+            <element signature="e#877#933#1" />
+            <element signature="e#3130#6801#0" />
+            <element signature="e#7193#8387#0" />
+            <element signature="e#8463#12185#0" />
+            <element signature="e#16444#23624#0" />
+            <element signature="e#30044#31382#0" />
+            <element signature="e#31499#32850#0" />
+            <element signature="e#32902#35329#0" />
+            <element signature="e#35444#37314#0" />
+            <element signature="e#37443#41257#0" />
           </folding>
         </state>
       </provider>
