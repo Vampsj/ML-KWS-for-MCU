@@ -366,12 +366,12 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
   first_filter_width = 8 # r in paper, local time-frequency patch of size (m x r)
-  first_filter_height = input_time_size # maybe represent m which is 32 but here is 98
-
+  #first_filter_height = input_time_size # maybe represent m which is 32 but here is 98
+  first_filter_height = 32
   first_filter_count = 186 # n feature maps
   first_filter_stride_x = 1
   # first_filter_stride_y = 1
-  first_filter_stride_y = 1
+  first_filter_stride_y = 4
   # first_weights: [input_time_size(32), 8, 1, 186] -> [filter_height, filter_width, in_channels, out_channels]
   first_weights = tf.Variable(
       tf.truncated_normal(
@@ -406,6 +406,8 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
 
   # flatten the convolution results
   # count = 6138
+  print("***********")
+  print(first_conv_element_count)
   flattened_first_conv = tf.reshape(first_dropout,
                                     [-1, first_conv_element_count])
   first_fc_output_channels = 128
