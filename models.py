@@ -64,6 +64,20 @@ def prepare_model_settings(label_count, sample_rate, clip_duration_ms,
   else:
     spectrogram_length = 1 + int(length_minus_window / window_stride_samples)
   fingerprint_size = dct_coefficient_count * spectrogram_length
+
+  print("desired sample->windowsizesample->windowstridesmaple->lengthminuswindow->spectrogramlength")
+  print(desired_samples)
+  print(";")
+  print(window_size_samples)
+  print(";")
+  print(window_stride_samples)
+  print(";")
+  print(length_minus_window)
+  print(";")
+  print(spectrogram_length)
+  print(";")
+  print(window_size_ms)
+  print(clip_duration_ms)
   return {
       'desired_samples': desired_samples,
       'window_size_samples': window_size_samples,
@@ -361,9 +375,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
 
   input_frequency_size = model_settings['dct_coefficient_count']
   input_time_size = model_settings['spectrogram_length']
-  print("input frequency size")
-  print(input_frequency_size)
-  # [batch, height, width, channels]
+  # [batch, height, width, channels] = [-1, 98, 40, 1]
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
   first_filter_width = 8 # r in paper, local time-frequency patch of size (m x r)
@@ -439,8 +451,6 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
     final_fc_input = second_fc
   # 出力の次元はラベルの次元に一致させ
   label_count = model_settings['label_count']
-  print("label count:")
-  print(label_count)
   final_fc_weights = tf.Variable(
       tf.truncated_normal(
           [second_fc_output_channels, label_count], stddev=0.01))
