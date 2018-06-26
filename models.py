@@ -404,6 +404,9 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
       first_filter_stride_y)
   first_conv_element_count = int(
       first_conv_output_width * first_conv_output_height * first_filter_count)
+  print("****************")
+  print(first_conv_element_count)
+  print("****************")
   # flatten the convolution results
   # count = 6138
   flattened_first_conv = tf.reshape(first_dropout,
