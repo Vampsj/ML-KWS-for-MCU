@@ -27,7 +27,7 @@ import argparse
 import os.path
 import sys
 import time
-
+import numpy as np
 import tensorflow as tf
 import input_data
 import models
@@ -142,10 +142,12 @@ def run_inference(wanted_words, sample_rate, clip_duration_ms,
   
   # test set
   set_size = audio_processor.set_size('testing')
+  time_list = []
   tf.logging.info('set_size=%d', set_size)
   total_accuracy = 0
   total_conf_matrix = None
   for i in range(0, set_size, FLAGS.batch_size):
+    start_time = time.time()
     test_fingerprints, test_ground_truth = audio_processor.get_data(
         FLAGS.batch_size, i, model_settings, 0.0, 0.0, 0, 'testing', sess)
     test_accuracy, conf_matrix = sess.run(
@@ -154,12 +156,16 @@ def run_inference(wanted_words, sample_rate, clip_duration_ms,
             fingerprint_input: test_fingerprints,
             ground_truth_input: test_ground_truth,
         })
+    end_time = time.time()
+    time_list.append(end_time-start_time)
+    mean_time = np.mean(time_list)
     batch_size = min(FLAGS.batch_size, set_size - i)
     total_accuracy += (test_accuracy * batch_size) / set_size
     if total_conf_matrix is None:
       total_conf_matrix = conf_matrix
     else:
       total_conf_matrix += conf_matrix
+  tf.logging.info("Average evalution time: %.2f" % mean_time)
   tf.logging.info('Confusion Matrix:\n %s' % (total_conf_matrix))
   tf.logging.info('Test accuracy = %.2f%% (N=%d)' % (total_accuracy * 100,
                                                            set_size))
@@ -167,13 +173,10 @@ def run_inference(wanted_words, sample_rate, clip_duration_ms,
 def main(_):
 
   # Create the model, load weights from checkpoint and run on train/val/test
-  time_start = time.time()
   run_inference(FLAGS.wanted_words, FLAGS.sample_rate,
       FLAGS.clip_duration_ms, FLAGS.window_size_ms,
       FLAGS.window_stride_ms, FLAGS.dct_coefficient_count,
       FLAGS.model_architecture, FLAGS.model_size_info)
-  time_end = time.time()
-  print(time_end - time_start)
 
 
 if __name__ == '__main__':
