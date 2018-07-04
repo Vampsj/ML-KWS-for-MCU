@@ -656,6 +656,7 @@ def create_dnn_model(fingerprint_input, model_settings, model_size_info,
       with tf.variable_scope('fc'+str(i)):
           W = tf.get_variable('W', shape=[layer_dim[i-1], layer_dim[i]], 
                 initializer=tf.contrib.layers.xavier_initializer())
+          print("layer number:{0}, size of W is {1} * {2}".format(num_layers, layer_dim[i-1], layer_dim[i]))
           tf.summary.histogram('fc_'+str(i)+'_w', W)
           b = tf.get_variable('b', shape=[layer_dim[i]])
           tf.summary.histogram('fc_'+str(i)+'_b', b)
