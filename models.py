@@ -405,6 +405,8 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
 
   # flatten the convolution results
   # count = 6138
+  print("******COUNT*******")
+  print(first_conv_element_count)
   flattened_first_conv = tf.reshape(first_dropout,
                                     [-1, first_conv_element_count])
   first_fc_output_channels = 128
