@@ -386,8 +386,8 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
 
   # Linear
   # Some linear approximation
-  # first_relu = tf.nn.relu(first_conv)
-  first_relu = tf.nn.softmax(first_conv)
+  first_relu = tf.nn.relu(first_conv)
+  # first_relu = tf.nn.softmax(first_conv)
   # First DNN Layer
   if is_training:
     first_dropout = tf.nn.dropout(first_relu, dropout_prob)
