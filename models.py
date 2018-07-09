@@ -364,7 +364,9 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   input_time_size = model_settings['spectrogram_length']
   # [batch, height, width, channels] = [-1, 98, 40, 1]
   print("**** time and frequency *****")
+  print("input_time_size:")
   print(input_time_size)
+  print("  input_freq_size:")
   print(input_frequency_size)
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
@@ -373,7 +375,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   first_filter_count = 186 # n feature maps
   first_filter_stride_x = 1
   # first_filter_stride_y = 1
-  first_filter_stride_y = 4
+  first_filter_stride_y = 2
   # first_weights: [input_time_size(32), 8, 1, 186] -> [filter_height, filter_width, in_channels, out_channels]
   first_weights = tf.Variable(
       tf.truncated_normal(
@@ -410,6 +412,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   # count = 6138
   print("******COUNT conv numbers*******")
   print(first_conv_element_count)
+
   flattened_first_conv = tf.reshape(first_dropout,
                                     [-1, first_conv_element_count])
   first_fc_output_channels = 128
@@ -418,6 +421,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
       tf.truncated_normal(
           [first_conv_element_count, first_fc_output_channels], stddev=0.01))
   # fc_1st_b: [128]
+
   first_fc_bias = tf.Variable(tf.zeros([first_fc_output_channels]))
   # #InnerProd = count*count*128
   first_fc = tf.matmul(flattened_first_conv, first_fc_weights) + first_fc_bias

@@ -16,8 +16,8 @@
       <file leaf-file-name="train_commands.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train_commands.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+            <state relative-caret-position="255">
+              <caret line="15" column="12" lean-forward="true" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -38,13 +38,12 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="549">
-              <caret line="386" column="41" lean-forward="true" selection-start-line="386" selection-start-column="41" selection-end-line="386" selection-end-column="41" />
+            <state relative-caret-position="1491">
+              <caret line="442" column="2" selection-start-line="442" selection-start-column="2" selection-end-line="442" selection-end-column="2" />
               <folding>
                 <element signature="n#!!doc" />
                 <element signature="e#950#988#0" expanded="true" />
                 <element signature="e#7334#8528#0" />
-                <element signature="e#8604#12326#0" />
               </folding>
             </state>
           </provider>
@@ -328,7 +327,6 @@
             <element signature="n#!!doc" />
             <element signature="e#950#988#0" expanded="true" />
             <element signature="e#7334#8528#0" />
-            <element signature="e#8604#12326#0" />
           </folding>
         </state>
       </provider>
@@ -403,7 +401,6 @@
             <element signature="n#!!doc" />
             <element signature="e#950#988#0" expanded="true" />
             <element signature="e#7334#8528#0" />
-            <element signature="e#8604#12326#0" />
           </folding>
         </state>
       </provider>
@@ -415,13 +412,6 @@
           <folding>
             <element signature="n#!!doc" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train_commands.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
         </state>
       </provider>
     </entry>
@@ -469,6 +459,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/train_commands.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="12" lean-forward="true" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="499">
@@ -482,13 +479,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="549">
-          <caret line="386" column="41" lean-forward="true" selection-start-line="386" selection-start-column="41" selection-end-line="386" selection-end-column="41" />
+        <state relative-caret-position="1491">
+          <caret line="442" column="2" selection-start-line="442" selection-start-column="2" selection-end-line="442" selection-end-column="2" />
           <folding>
             <element signature="n#!!doc" />
             <element signature="e#950#988#0" expanded="true" />
             <element signature="e#7334#8528#0" />
-            <element signature="e#8604#12326#0" />
           </folding>
         </state>
       </provider>
