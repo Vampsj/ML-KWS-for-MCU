@@ -373,7 +373,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   # first_filter_width = 8 #  r in paper, local time-frequency patch of size (m x r)
   first_filter_width = 5
   first_filter_height = input_time_size # maybe represent m which is 32 but here is 98
-  first_filter_count = 186 # n feature maps
+  first_filter_count = 98 #186 # n feature maps
   first_filter_stride_x = 1
   # first_filter_stride_y = 1
   first_filter_stride_y = 5
