@@ -400,12 +400,21 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   else:
     first_dropout = first_relu
 
+  # Original code
+  #first_conv_output_width = math.floor(
+  #    (input_frequency_size - first_filter_width + first_filter_stride_x) /
+  #    first_filter_stride_x)
+  #first_conv_output_height = math.floor(
+  #    (input_time_size - first_filter_height + first_filter_stride_y) /
+  #    first_filter_stride_y)
+
   first_conv_output_width = math.floor(
-      (input_frequency_size - first_filter_width + first_filter_stride_x) /
-      first_filter_stride_x)
-  first_conv_output_height = math.floor(
-      (input_time_size - first_filter_height + first_filter_stride_y) /
+      (input_frequency_size - first_filter_width + first_filter_stride_y) /
       first_filter_stride_y)
+  first_conv_output_height = math.floor(
+      (input_time_size - first_filter_height + first_filter_stride_x) /
+      first_filter_stride_x)
+
   first_conv_element_count = int(
       first_conv_output_width * first_conv_output_height * first_filter_count)
 
