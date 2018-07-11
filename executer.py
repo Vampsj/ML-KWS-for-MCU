@@ -16,17 +16,17 @@ result_USERNUM_REGULARIZE_RANK_STEPSIZE.txt
 
 filter_width = [8]
 
-filter_count = [186]
+filter_count = [7, 25, 49, 98, 124, 145, 186]
 
 fstride_x = [1]
 
-fstride_y = [4]
+fstride_y = [2]
 
-frame_size = [30]
+frame_size = [80]
 
-frame_stride = [10]
+frame_stride = [40]
 
-mfcc_bins = [40]
+mfcc_bins = [10]
 
 
 # 実行スクリプト
