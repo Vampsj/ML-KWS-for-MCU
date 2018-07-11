@@ -78,7 +78,7 @@ def prepare_model_settings(label_count, sample_rate, clip_duration_ms,
 
 
 def create_model(fingerprint_input, model_settings, model_architecture,
-                 model_size_info, is_training, runtime_settings=None):
+                 model_size_info, fcnn_size_info, is_training, runtime_settings=None):
   """Builds a model of the requested architecture compatible with the settings.
 
   There are many possible ways of deriving predictions from a spectrogram
@@ -119,6 +119,9 @@ def create_model(fingerprint_input, model_settings, model_architecture,
   elif model_architecture == 'low_latency_conv':
     return create_low_latency_conv_model(fingerprint_input, model_settings,
                                          is_training)
+  elif model_architecture == 'low_latency_conv_tune':
+      return create_low_latency_conv_model_tune(fingerprint_input, model_settings,
+                                                fcnn_size_info, is_training)
   elif model_architecture == 'low_latency_svdf':
     return create_low_latency_svdf_model(fingerprint_input, model_settings,
                                          is_training, runtime_settings)
@@ -422,6 +425,160 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   # flatten the convolution results
   # count = 6138
   print("******COUNT conv numbers*******")
+  print(first_conv_element_count)
+
+  flattened_first_conv = tf.reshape(first_dropout,
+                                    [-1, first_conv_element_count])
+  first_fc_output_channels = 128
+  # fc_1st_W: [count, 128]
+  first_fc_weights = tf.Variable(
+      tf.truncated_normal(
+          [first_conv_element_count, first_fc_output_channels], stddev=0.01))
+  # fc_1st_b: [128]
+
+  first_fc_bias = tf.Variable(tf.zeros([first_fc_output_channels]))
+  # #InnerProd = count*count*128
+  first_fc = tf.matmul(flattened_first_conv, first_fc_weights) + first_fc_bias
+
+  # Second DNN Layer
+  if is_training:
+    second_fc_input = tf.nn.dropout(first_fc, dropout_prob)
+  else:
+    second_fc_input = first_fc
+
+  second_fc_output_channels = 128
+  second_fc_weights = tf.Variable(
+      tf.truncated_normal(
+          [first_fc_output_channels, second_fc_output_channels], stddev=0.01))
+  second_fc_bias = tf.Variable(tf.zeros([second_fc_output_channels]))
+  # #InnerProd = 128*128*128
+  second_fc = tf.matmul(second_fc_input, second_fc_weights) + second_fc_bias
+
+  # Last FC Layer to logits
+  if is_training:
+    final_fc_input = tf.nn.dropout(second_fc, dropout_prob)
+  else:
+    final_fc_input = second_fc
+  # 出力の次元はラベルの次元に一致させ
+  label_count = model_settings['label_count']
+  final_fc_weights = tf.Variable(
+      tf.truncated_normal(
+          [second_fc_output_channels, label_count], stddev=0.01))
+  final_fc_bias = tf.Variable(tf.zeros([label_count]))
+  # #InnerProd = 128*128*label_count = 128*128*12
+  final_fc = tf.matmul(final_fc_input, final_fc_weights) + final_fc_bias
+  if is_training:
+    return final_fc, dropout_prob
+  else:
+    return final_fc
+
+def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
+                                  is_training, fcnn_size_info):
+  """Builds a convolutional model with low compute requirements.
+
+  This is roughly the network labeled as 'cnn-one-fstride4' in the
+  'Convolutional Neural Networks for Small-footprint Keyword Spotting' paper:
+  http://www.isca-speech.org/archive/interspeech_2015/papers/i15_1478.pdf
+
+  conv [m=32, r=8, n=186, s=1, v=4] -> linear -> dnn -> dnn -> softmax
+
+  Here's the layout of the graph:
+
+  (fingerprint_input)
+          v
+      [Conv2D]<-(weights)
+          v
+      [BiasAdd]<-(bias)
+          v
+        [Relu]
+          v
+      [MatMul]<-(weights)
+          v
+      [BiasAdd]<-(bias)
+          v
+      [MatMul]<-(weights)
+          v
+      [BiasAdd]<-(bias)
+          v
+      [MatMul]<-(weights)
+          v
+      [BiasAdd]<-(bias)
+          v
+
+  This produces slightly lower quality results than the 'conv' model, but needs
+  fewer weight parameters and computations.
+
+  During training, dropout nodes are introduced after the relu, controlled by a
+  placeholder.
+
+  Args:
+    fingerprint_input: TensorFlow node that will output audio feature vectors.
+    model_settings: Dictionary of information about the model.
+    is_training: Whether the model is going to be used for training.
+
+  Returns:
+    TensorFlow node outputting logits results, and optionally a dropout
+    placeholder.
+  """
+  if is_training:
+    dropout_prob = tf.placeholder(tf.float32, name='dropout_prob')
+
+  input_frequency_size = model_settings['dct_coefficient_count']
+  input_time_size = model_settings['spectrogram_length']
+  # [batch, height, width, channels] = [-1, 98, 40, 1]
+  print("**** INPUT: Time and Frequency *****")
+  print("T * F:[%d * %d] \n" % (input_time_size, input_frequency_size))
+
+  fingerprint_4d = tf.reshape(fingerprint_input,
+                              [-1, input_time_size, input_frequency_size, 1])
+  first_filter_width = fcnn_size_info[0] # Width = Frequency
+  first_filter_height = input_time_size # Height = Time
+  first_filter_count = fcnn_size_info[1] # Channel numbers
+  print("**** Filter Size AND Channel *****")
+  print("Size:[%d * %d], COUNT:%d\n" % (first_filter_height, first_filter_width, first_filter_count))
+
+  first_filter_stride_x = fcnn_size_info[2] # width -> freq
+  first_filter_stride_y = fcnn_size_info[3] # height -> time
+  print("**** STRIDE INFO *****")
+  print("Size:[%d * %d]\n" % (first_filter_stride_y, first_filter_stride_x))
+
+  # first_weights: [input_time_size(32), 8, 1, 186] -> [filter_height, filter_width, in_channels, out_channels]
+  first_weights = tf.Variable(
+      tf.truncated_normal(
+          [first_filter_height, first_filter_width, 1, first_filter_count],
+          stddev=0.01))
+  # first bias: [186]
+  first_bias = tf.Variable(tf.zeros([first_filter_count]))
+  # Why stride x first?
+  # conv2d(Data, Filter, [stride])  Operations of inner product in CNN is:
+  # exchanged x and y
+  first_conv = tf.nn.conv2d(fingerprint_4d, first_weights, [
+      1, first_filter_stride_y, first_filter_stride_x, 1
+  ], 'VALID') + first_bias
+
+  # Linear
+  # Some linear approximation
+  first_relu = tf.nn.relu(first_conv)
+  # first_relu = tf.nn.softmax(first_conv)
+
+  if is_training:
+    first_dropout = tf.nn.dropout(first_relu, dropout_prob)
+  else:
+    first_dropout = first_relu
+
+  first_conv_output_width = math.floor(
+      (input_frequency_size - first_filter_width + first_filter_stride_x) /
+      first_filter_stride_x)
+  first_conv_output_height = math.floor(
+      (input_time_size - first_filter_height + first_filter_stride_y) /
+      first_filter_stride_y)
+
+  first_conv_element_count = int(
+      first_conv_output_width * first_conv_output_height * first_filter_count)
+
+  # flatten the convolution results
+  # count = 6138
+  print("**** Count CONV Numbers ****")
   print(first_conv_element_count)
 
   flattened_first_conv = tf.reshape(first_dropout,

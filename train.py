@@ -136,6 +136,7 @@ def main(_):
       model_settings,
       FLAGS.model_architecture,
       FLAGS.model_size_info,
+      FLAGS.fcnn_size_info,
       is_training=True)
 
   # Define loss and optimizer
@@ -445,6 +446,12 @@ if __name__ == '__main__':
       type=int,
       nargs="+",
       default=[128,128,128],
+      help='Model dimensions - different for various models')
+  parser.add_argument(
+      '--fcnn_size_info',
+      type=int,
+      nargs="+",
+      default=[8, 186, 4, 1],
       help='Model dimensions - different for various models')
   parser.add_argument(
       '--check_nans',
