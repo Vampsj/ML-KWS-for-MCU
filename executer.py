@@ -43,7 +43,7 @@ def f(args):
 if __name__ == '__main__':
 
     # 引数の順番でおねがいします
-    params = itertools.product(filter_width, filter_count, fstride_x, fstride_y, fstride_count, frame_size, frame_stride, mfcc_bins)
+    params = itertools.product(filter_width, filter_count, fstride_x, fstride_y, frame_size, frame_stride, mfcc_bins)
 
     # デフォルト並列数は4に設定しています
     p = Pool(1)
