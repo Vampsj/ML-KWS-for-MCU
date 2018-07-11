@@ -473,7 +473,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
     return final_fc
 
 def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
-                                  is_training, model_size_info):
+                                       model_size_info, is_training):
   """Builds a convolutional model with low compute requirements.
 
   This is roughly the network labeled as 'cnn-one-fstride4' in the
