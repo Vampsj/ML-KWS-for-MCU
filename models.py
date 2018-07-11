@@ -593,7 +593,8 @@ def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
   first_fc_bias = tf.Variable(tf.zeros([first_fc_output_channels]))
   # #InnerProd = count*count*128
   first_fc = tf.matmul(flattened_first_conv, first_fc_weights) + first_fc_bias
-
+  print("******************")
+  print("First FC Size:[%d, %d]\n" % (first_conv_element_count, first_fc_output_channels))
   # Second DNN Layer
   if is_training:
     second_fc_input = tf.nn.dropout(first_fc, dropout_prob)
@@ -607,7 +608,8 @@ def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
   second_fc_bias = tf.Variable(tf.zeros([second_fc_output_channels]))
   # #InnerProd = 128*128*128
   second_fc = tf.matmul(second_fc_input, second_fc_weights) + second_fc_bias
-
+  print("******************")
+  print("Second FC Size:[%d, %d]\n" % (first_fc_output_channels, second_fc_output_channels))
   # Last FC Layer to logits
   if is_training:
     final_fc_input = tf.nn.dropout(second_fc, dropout_prob)
@@ -621,6 +623,8 @@ def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
   final_fc_bias = tf.Variable(tf.zeros([label_count]))
   # #InnerProd = 128*128*label_count = 128*128*12
   final_fc = tf.matmul(final_fc_input, final_fc_weights) + final_fc_bias
+  print("******************")
+  print("Last FC Size:[%d, %d]\n" % (second_fc_output_channels, label_count))
   if is_training:
     return final_fc, dropout_prob
   else:
