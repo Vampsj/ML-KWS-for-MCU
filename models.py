@@ -70,6 +70,7 @@ def prepare_model_settings(label_count, sample_rate, clip_duration_ms,
       'window_size_samples': window_size_samples,
       'window_stride_samples': window_stride_samples,
       'spectrogram_length': spectrogram_length,
+      'length_minus_window': length_minus_window,  #追加
       'dct_coefficient_count': dct_coefficient_count,
       'fingerprint_size': fingerprint_size,
       'label_count': label_count,
@@ -523,8 +524,26 @@ def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
   if is_training:
     dropout_prob = tf.placeholder(tf.float32, name='dropout_prob')
 
-  input_frequency_size = model_settings['dct_coefficient_count']
-  input_time_size = model_settings['spectrogram_length']
+  # Original code
+  #input_frequency_size = model_settings['dct_coefficient_count']
+  #input_time_size = model_settings['spectrogram_length']
+  #
+
+  sample_rate = model_settings["sample_rate"]
+  window_size_ms = model_size_info[4]
+  window_size_samples = int(sample_rate * window_size_ms / 1000)
+
+  window_stride_ms = model_size_info[5]
+  window_stride_samples = int(sample_rate * window_stride_ms / 1000)
+
+  desired_samples = model_settings["desired_samples"]
+  length_minus_window = (desired_samples - window_size_samples)
+  spectrogram_length = 1 + int(length_minus_window / window_stride_samples)
+
+  # input_frequency_size = model_settings['dct_coefficient_count']
+  input_frequency_size = model_size_info[6]
+  input_time_size = spectrogram_length
+  # input_time_size = model_size_info[5]
   # [batch, height, width, channels] = [-1, 98, 40, 1]
   print("**** INPUT: Time and Frequency *****")
   print("T * F:[%d * %d] \n" % (input_time_size, input_frequency_size))
