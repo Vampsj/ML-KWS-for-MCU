@@ -78,7 +78,7 @@ def prepare_model_settings(label_count, sample_rate, clip_duration_ms,
 
 
 def create_model(fingerprint_input, model_settings, model_architecture,
-                 model_size_info, fcnn_size_info, is_training, runtime_settings=None):
+                 model_size_info, is_training, runtime_settings=None):
   """Builds a model of the requested architecture compatible with the settings.
 
   There are many possible ways of deriving predictions from a spectrogram
@@ -121,7 +121,7 @@ def create_model(fingerprint_input, model_settings, model_architecture,
                                          is_training)
   elif model_architecture == 'low_latency_conv_tune':
       return create_low_latency_conv_model_tune(fingerprint_input, model_settings,
-                                                fcnn_size_info, is_training)
+                                                model_size_info, is_training)
   elif model_architecture == 'low_latency_svdf':
     return create_low_latency_svdf_model(fingerprint_input, model_settings,
                                          is_training, runtime_settings)
@@ -473,7 +473,7 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
     return final_fc
 
 def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
-                                  is_training, fcnn_size_info):
+                                  is_training, model_size_info):
   """Builds a convolutional model with low compute requirements.
 
   This is roughly the network labeled as 'cnn-one-fstride4' in the
@@ -531,14 +531,14 @@ def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
 
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
-  first_filter_width = fcnn_size_info[0] # Width = Frequency
+  first_filter_width = model_size_info[0] # Width = Frequency
   first_filter_height = input_time_size # Height = Time
-  first_filter_count = fcnn_size_info[1] # Channel numbers
+  first_filter_count = model_size_info[1] # Channel numbers
   print("**** Filter Size AND Channel *****")
   print("Size:[%d * %d], COUNT:%d\n" % (first_filter_height, first_filter_width, first_filter_count))
 
-  first_filter_stride_x = fcnn_size_info[2] # width -> freq
-  first_filter_stride_y = fcnn_size_info[3] # height -> time
+  first_filter_stride_x = model_size_info[2] # width -> freq
+  first_filter_stride_y = model_size_info[3] # height -> time
   print("**** STRIDE INFO *****")
   print("Size:[%d * %d]\n" % (first_filter_stride_y, first_filter_stride_x))
 
