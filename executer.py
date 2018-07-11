@@ -14,19 +14,19 @@ result_USERNUM_REGULARIZE_RANK_STEPSIZE.txt
 に出力されます．気に入らない場合は書き換えてください．
 '''
 
-filter_width = [8]
+filter_width = [2, 4, 5, 8]
 
 filter_count = [7, 25, 49, 98, 124, 145, 186]
 
 fstride_x = [1]
 
-fstride_y = [2]
+fstride_y = [2, 4]
 
-frame_size = [80]
+frame_size = [30, 40, 80, 100]
 
-frame_stride = [40]
+frame_stride = [10, 20, 40, 50]
 
-mfcc_bins = [10]
+mfcc_bins = [10, 12, 16, 20, 36, 40]
 
 
 # 実行スクリプト
