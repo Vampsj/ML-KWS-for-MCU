@@ -386,8 +386,9 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   first_bias = tf.Variable(tf.zeros([first_filter_count]))
   # Why stride x first?
   # conv2d(Data, Filter, [stride])  Operations of inner product in CNN is:
+  # exchanged x and y
   first_conv = tf.nn.conv2d(fingerprint_4d, first_weights, [
-      1, first_filter_stride_y, first_filter_stride_x, 1
+      1, first_filter_stride_x, first_filter_stride_y, 1
   ], 'VALID') + first_bias
 
   # Linear
