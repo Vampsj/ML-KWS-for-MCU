@@ -303,6 +303,10 @@ def main(_):
   tf.logging.info('Final test accuracy = %.2f%% (N=%d)' % (total_accuracy * 100,
                                                            set_size))
 
+  print('Confusion Matrix:\n %s' % (total_conf_matrix))
+  print('Final test accuracy = %.2f%% (N=%d)' % (total_accuracy * 100,
+                                                           set_size))
+
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
