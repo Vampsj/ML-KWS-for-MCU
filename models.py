@@ -605,7 +605,8 @@ def create_low_latency_conv_model_t(fingerprint_input, model_settings,
   first_fc_bias = tf.Variable(tf.zeros([first_fc_output_channels]))
   # #InnerProd = count*count*128
   first_fc = tf.matmul(flattened_first_conv, first_fc_weights) + first_fc_bias
-
+  print("******************")
+  print("First FC Size:[%d, %d]\n" % (first_conv_element_count, first_fc_output_channels))
   # Second DNN Layer
   if is_training:
     second_fc_input = tf.nn.dropout(first_fc, dropout_prob)
