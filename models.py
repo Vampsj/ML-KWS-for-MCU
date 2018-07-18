@@ -562,10 +562,10 @@ def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
   print("**** Filter Size AND Channel *****")
   print("Size:[%d * %d], COUNT:%d\n" % (first_filter_height, first_filter_width, first_filter_count))
 
-  first_filter_stride_x = model_size_info[2] # width -> freq
-  first_filter_stride_y = model_size_info[3] # height -> time
+  first_filter_stride_h = model_size_info[2] # h -> time
+  first_filter_stride_w = model_size_info[3] # w -> freq
   print("**** STRIDE INFO *****")
-  print("Size:[%d * %d]\n" % (first_filter_stride_y, first_filter_stride_x))
+  print("Size:[%d * %d]\n" % (first_filter_stride_h, first_filter_stride_w))
 
   # first_weights: [input_time_size(32), 8, 1, 186] -> [filter_height, filter_width, in_channels, out_channels]
   first_weights = tf.Variable(
@@ -578,7 +578,7 @@ def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
   # conv2d(Data, Filter, [stride])  Operations of inner product in CNN is:
   # exchanged x and y
   first_conv = tf.nn.conv2d(fingerprint_4d, first_weights, [
-      1, first_filter_stride_y, first_filter_stride_x, 1
+      1, first_filter_stride_h, first_filter_stride_w, 1
   ], 'VALID') + first_bias
 
   # Linear
@@ -592,11 +592,11 @@ def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
     first_dropout = first_relu
 
   first_conv_output_width = math.floor(
-      (input_frequency_size - first_filter_width + first_filter_stride_x) /
-      first_filter_stride_x)
+      (input_frequency_size - first_filter_width + first_filter_stride_w) /
+      first_filter_stride_w)
   first_conv_output_height = math.floor(
-      (input_time_size - first_filter_height + first_filter_stride_y) /
-      first_filter_stride_y)
+      (input_time_size - first_filter_height + first_filter_stride_h) /
+      first_filter_stride_h)
 
   first_conv_element_count = int(
       first_conv_output_width * first_conv_output_height * first_filter_count)
