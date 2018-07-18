@@ -539,7 +539,7 @@ def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
   desired_samples = model_settings["desired_samples"]
   length_minus_window = (desired_samples - window_size_samples)
 
-if length_minus_window < 0:
+  if length_minus_window < 0:
     spectrogram_length = 0
   else:
     spectrogram_length = 1 + int(length_minus_window / window_stride_samples)
