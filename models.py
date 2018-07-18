@@ -367,11 +367,8 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
   input_frequency_size = model_settings['dct_coefficient_count']
   input_time_size = model_settings['spectrogram_length']
   # [batch, height, width, channels] = [-1, 98, 40, 1]
-  print("**** time and frequency *****")
-  print("input_time_size:")
-  print(input_time_size)
-  print("  input_freq_size:")
-  print(input_frequency_size)
+  print("**** INPUT: Time and Frequency *****")
+  print("T * F:[%d * %d] \n" % (input_time_size, input_frequency_size))
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
   first_filter_width = 8 #  r in paper, local time-frequency patch of size (m x r)
@@ -425,7 +422,11 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
 
   # flatten the convolution results
   # count = 6138
-  print("******COUNT conv numbers*******")
+  print("**** Filter Size AND Channel *****")
+  print("Size:[%d * %d], COUNT:%d\n" % (first_filter_height, first_filter_width, first_filter_count))
+  print("**** STRIDE INFO *****")
+  print("Size:[%d * %d]\n" % (first_filter_stride_y, first_filter_stride_x))
+  print("**** Count CONV Numbers ****")
   print(first_conv_element_count)
 
   flattened_first_conv = tf.reshape(first_dropout,
