@@ -14,7 +14,7 @@
 # limitations under the License.
 # ==============================================================================
 #
-# Modifications Copyright 2017 Arm Inc. All Rights Reserved. 
+# Modifications Copyright 2017 Arm Inc. All Rights Reserved.
 # Added new model definitions for speech command recognition used in
 # the paper: https://arxiv.org/pdf/1711.07128.pdf
 #
@@ -123,6 +123,9 @@ def create_model(fingerprint_input, model_settings, model_architecture,
   elif model_architecture == 'low_latency_conv_tune':
       return create_low_latency_conv_model_tune(fingerprint_input, model_settings,
                                                 model_size_info, is_training)
+  elif model_architecture == 'low_latency_conv_t':
+      return create_low_latency_conv_model_t(fingerprint_input, model_settings,
+                                             model_size_info,is_training)
   elif model_architecture == 'low_latency_svdf':
     return create_low_latency_svdf_model(fingerprint_input, model_settings,
                                          is_training, runtime_settings)
@@ -133,24 +136,24 @@ def create_model(fingerprint_input, model_settings, model_architecture,
     return create_cnn_model(fingerprint_input, model_settings, model_size_info,
                               is_training)
   elif model_architecture == 'basic_lstm':
-    return create_basic_lstm_model(fingerprint_input, model_settings, 
+    return create_basic_lstm_model(fingerprint_input, model_settings,
                                      model_size_info, is_training)
   elif model_architecture == 'lstm':
-    return create_lstm_model(fingerprint_input, model_settings, 
+    return create_lstm_model(fingerprint_input, model_settings,
                                model_size_info, is_training)
   elif model_architecture == 'gru':
     return create_gru_model(fingerprint_input, model_settings, model_size_info,
                               is_training)
   elif model_architecture == 'crnn':
-    return create_crnn_model(fingerprint_input, model_settings, model_size_info, 
+    return create_crnn_model(fingerprint_input, model_settings, model_size_info,
                                is_training)
   elif model_architecture == 'ds_cnn':
-    return create_ds_cnn_model(fingerprint_input, model_settings, 
+    return create_ds_cnn_model(fingerprint_input, model_settings,
                                  model_size_info, is_training)
   else:
     raise Exception('model_architecture argument "' + model_architecture +
                     '" not recognized, should be one of "single_fc", "conv",' +
-                    ' "low_latency_conv", "low_latency_svdf",'+ 
+                    ' "low_latency_conv", "low_latency_svdf",'+
                     ' "dnn", "cnn", "basic_lstm", "lstm",'+
                     ' "gru", "crnn" or "ds_cnn"')
 
@@ -473,6 +476,168 @@ def create_low_latency_conv_model(fingerprint_input, model_settings,
     return final_fc, dropout_prob
   else:
     return final_fc
+
+def create_low_latency_conv_model_t(fingerprint_input, model_settings,
+                                  model_size_info, is_training):
+  """Builds a convolutional model with low compute requirements.
+
+  This is roughly the network labeled as 'cnn-one-fstride4' in the
+  'Convolutional Neural Networks for Small-footprint Keyword Spotting' paper:
+  http://www.isca-speech.org/archive/interspeech_2015/papers/i15_1478.pdf
+
+  conv [m=32, r=8, n=186, s=1, v=4] -> linear -> dnn -> dnn -> softmax
+
+  Here's the layout of the graph:
+
+  (fingerprint_input)
+          v
+      [Conv2D]<-(weights)
+          v
+      [BiasAdd]<-(bias)
+          v
+        [Relu]
+          v
+      [MatMul]<-(weights)
+          v
+      [BiasAdd]<-(bias)
+          v
+      [MatMul]<-(weights)
+          v
+      [BiasAdd]<-(bias)
+          v
+      [MatMul]<-(weights)
+          v
+      [BiasAdd]<-(bias)
+          v
+
+  This produces slightly lower quality results than the 'conv' model, but needs
+  fewer weight parameters and computations.
+
+  During training, dropout nodes are introduced after the relu, controlled by a
+  placeholder.
+
+  Args:
+    fingerprint_input: TensorFlow node that will output audio feature vectors.
+    model_settings: Dictionary of information about the model.
+    is_training: Whether the model is going to be used for training.
+
+  Returns:
+    TensorFlow node outputting logits results, and optionally a dropout
+    placeholder.
+  """
+  if is_training:
+    dropout_prob = tf.placeholder(tf.float32, name='dropout_prob')
+
+  input_frequency_size = model_settings['dct_coefficient_count']
+  input_time_size = model_settings['spectrogram_length']
+  # [batch, height, width, channels] = [-1, 98, 40, 1]
+  print("**** INPUT: Time and Frequency *****")
+  print("T * F:[%d * %d] \n" % (input_time_size, input_frequency_size))
+  fingerprint_4d = tf.reshape(fingerprint_input,
+                              [-1, input_time_size, input_frequency_size, 1])
+  first_filter_width = model_size_info[0] #  r in paper, local time-frequency patch of size (m x r)
+  # first_filter_width = 5
+  first_filter_height = input_time_size # maybe represent m which is 32 but here is 98
+  first_filter_count = model_size_info[1] #98 #186 # n feature maps
+  first_filter_stride_x = 1
+  # first_filter_stride_y = 1
+  first_filter_stride_y = model_size_info[2]
+  # first_weights: [input_time_size(32), 8, 1, 186] -> [filter_height, filter_width, in_channels, out_channels]
+  first_weights = tf.Variable(
+      tf.truncated_normal(
+          [first_filter_height, first_filter_width, 1, first_filter_count],
+          stddev=0.01))
+  # first bias: [186]
+  first_bias = tf.Variable(tf.zeros([first_filter_count]))
+  # Why stride x first?
+  # conv2d(Data, Filter, [stride])  Operations of inner product in CNN is:
+  # exchanged x and y
+  first_conv = tf.nn.conv2d(fingerprint_4d, first_weights, [
+      1, first_filter_stride_x, first_filter_stride_y, 1
+  ], 'VALID') + first_bias
+
+  # Linear
+  # Some linear approximation
+  first_relu = tf.nn.relu(first_conv)
+  # first_relu = tf.nn.softmax(first_conv)
+
+  if is_training:
+    first_dropout = tf.nn.dropout(first_relu, dropout_prob)
+  else:
+    first_dropout = first_relu
+
+  # Original code
+  #first_conv_output_width = math.floor(
+  #    (input_frequency_size - first_filter_width + first_filter_stride_x) /
+  #    first_filter_stride_x)
+  #first_conv_output_height = math.floor(
+  #    (input_time_size - first_filter_height + first_filter_stride_y) /
+  #    first_filter_stride_y)
+
+  first_conv_output_width = math.floor(
+      (input_frequency_size - first_filter_width + first_filter_stride_y) /
+      first_filter_stride_y)
+  first_conv_output_height = math.floor(
+      (input_time_size - first_filter_height + first_filter_stride_x) /
+      first_filter_stride_x)
+
+  first_conv_element_count = int(
+      first_conv_output_width * first_conv_output_height * first_filter_count)
+
+  # flatten the convolution results
+  # count = 6138
+  print("**** Filter Size AND Channel *****")
+  print("Size:[%d * %d], COUNT:%d\n" % (first_filter_height, first_filter_width, first_filter_count))
+  print("**** STRIDE INFO *****")
+  print("Size:[%d * %d]\n" % (first_filter_stride_y, first_filter_stride_x))
+  print("**** Count CONV Numbers ****")
+  print(first_conv_element_count)
+
+  flattened_first_conv = tf.reshape(first_dropout,
+                                    [-1, first_conv_element_count])
+  first_fc_output_channels = 128
+  # fc_1st_W: [count, 128]
+  first_fc_weights = tf.Variable(
+      tf.truncated_normal(
+          [first_conv_element_count, first_fc_output_channels], stddev=0.01))
+  # fc_1st_b: [128]
+
+  first_fc_bias = tf.Variable(tf.zeros([first_fc_output_channels]))
+  # #InnerProd = count*count*128
+  first_fc = tf.matmul(flattened_first_conv, first_fc_weights) + first_fc_bias
+
+  # Second DNN Layer
+  if is_training:
+    second_fc_input = tf.nn.dropout(first_fc, dropout_prob)
+  else:
+    second_fc_input = first_fc
+
+  second_fc_output_channels = 128
+  second_fc_weights = tf.Variable(
+      tf.truncated_normal(
+          [first_fc_output_channels, second_fc_output_channels], stddev=0.01))
+  second_fc_bias = tf.Variable(tf.zeros([second_fc_output_channels]))
+  # #InnerProd = 128*128*128
+  second_fc = tf.matmul(second_fc_input, second_fc_weights) + second_fc_bias
+
+  # Last FC Layer to logits
+  if is_training:
+    final_fc_input = tf.nn.dropout(second_fc, dropout_prob)
+  else:
+    final_fc_input = second_fc
+  # 出力の次元はラベルの次元に一致させ
+  label_count = model_settings['label_count']
+  final_fc_weights = tf.Variable(
+      tf.truncated_normal(
+          [second_fc_output_channels, label_count], stddev=0.01))
+  final_fc_bias = tf.Variable(tf.zeros([label_count]))
+  # #InnerProd = 128*128*label_count = 128*128*12
+  final_fc = tf.matmul(final_fc_input, final_fc_weights) + final_fc_bias
+  if is_training:
+    return final_fc, dropout_prob
+  else:
+    return final_fc
+
 
 def create_low_latency_conv_model_tune(fingerprint_input, model_settings,
                                        model_size_info, is_training):
@@ -839,12 +1004,12 @@ def create_low_latency_svdf_model(fingerprint_input, model_settings,
   else:
     return final_fc
 
-def create_dnn_model(fingerprint_input, model_settings, model_size_info, 
+def create_dnn_model(fingerprint_input, model_settings, model_size_info,
                        is_training):
   """Builds a model with multiple hidden fully-connected layers.
   model_size_info: length of the array defines the number of hidden-layers and
-                   each element in the array represent the number of neurons 
-                   in that layer 
+                   each element in the array represent the number of neurons
+                   in that layer
   """
 
   if is_training:
@@ -858,7 +1023,7 @@ def create_dnn_model(fingerprint_input, model_settings, model_size_info,
   tf.summary.histogram('input', flow)
   for i in range(1, num_layers + 1):
       with tf.variable_scope('fc'+str(i)):
-          W = tf.get_variable('W', shape=[layer_dim[i-1], layer_dim[i]], 
+          W = tf.get_variable('W', shape=[layer_dim[i-1], layer_dim[i]],
                 initializer=tf.contrib.layers.xavier_initializer())
           print("layer number:{0}, size of W is {1} * {2}".format(num_layers, layer_dim[i-1], layer_dim[i]))
           tf.summary.histogram('fc_'+str(i)+'_w', W)
@@ -869,7 +1034,7 @@ def create_dnn_model(fingerprint_input, model_settings, model_size_info,
           if is_training:
             flow = tf.nn.dropout(flow, dropout_prob)
 
-  weights = tf.get_variable('final_fc', shape=[layer_dim[-1], label_count], 
+  weights = tf.get_variable('final_fc', shape=[layer_dim[-1], label_count],
               initializer=tf.contrib.layers.xavier_initializer())
   bias = tf.Variable(tf.zeros([label_count]))
   logits = tf.matmul(flow, weights) + bias
@@ -880,7 +1045,7 @@ def create_dnn_model(fingerprint_input, model_settings, model_size_info,
 
 def create_cnn_model(fingerprint_input, model_settings, model_size_info,
                        is_training):
-  """Builds a model with 2 convolution layers followed by a linear layer and 
+  """Builds a model with 2 convolution layers followed by a linear layer and
       a hidden fully-connected layer.
   model_size_info: defines the first and second convolution parameters in
       {number of conv features, conv filter height, width, stride in y,x dir.},
@@ -893,18 +1058,18 @@ def create_cnn_model(fingerprint_input, model_settings, model_size_info,
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
 
-  first_filter_count = model_size_info[0] 
+  first_filter_count = model_size_info[0]
   first_filter_height = model_size_info[1]   #time axis
   first_filter_width = model_size_info[2]    #frequency axis
   first_filter_stride_y = model_size_info[3] #time axis
   first_filter_stride_x = model_size_info[4] #frequency_axis
 
-  second_filter_count = model_size_info[5] 
+  second_filter_count = model_size_info[5]
   second_filter_height = model_size_info[6]   #time axis
   second_filter_width = model_size_info[7]    #frequency axis
   second_filter_stride_y = model_size_info[8] #time axis
   second_filter_stride_x = model_size_info[9] #frequency_axis
- 
+
   linear_layer_size = model_size_info[10]
   fc_size = model_size_info[11]
 
@@ -934,7 +1099,7 @@ def create_cnn_model(fingerprint_input, model_settings, model_size_info,
   # second conv
   second_weights = tf.Variable(
       tf.truncated_normal(
-          [second_filter_height, second_filter_width, first_filter_count, 
+          [second_filter_height, second_filter_width, first_filter_count,
              second_filter_count],
           stddev=0.01))
   second_bias = tf.Variable(tf.zeros([second_filter_count]))
@@ -973,7 +1138,7 @@ def create_cnn_model(fingerprint_input, model_settings, model_size_info,
           [linear_layer_size, first_fc_output_channels], stddev=0.01))
   first_fc_bias = tf.Variable(tf.zeros([first_fc_output_channels]))
   first_fc = tf.matmul(flow, first_fc_weights) + first_fc_bias
-  first_fc = tf.layers.batch_normalization(first_fc, training=is_training, 
+  first_fc = tf.layers.batch_normalization(first_fc, training=is_training,
                name='bn3')
   first_fc = tf.nn.relu(first_fc)
   if is_training:
@@ -992,9 +1157,9 @@ def create_cnn_model(fingerprint_input, model_settings, model_size_info,
     return final_fc
 
 
-def create_basic_lstm_model(fingerprint_input, model_settings, model_size_info, 
+def create_basic_lstm_model(fingerprint_input, model_settings, model_size_info,
                               is_training):
-  """Builds a model with a basic lstm layer (without output projection and 
+  """Builds a model with a basic lstm layer (without output projection and
        peep-hole connections)
   model_size_info: defines the number of memory cells in basic lstm model
   """
@@ -1010,18 +1175,18 @@ def create_basic_lstm_model(fingerprint_input, model_settings, model_size_info,
   if type(model_size_info) is list:
     LSTM_units = model_size_info[0]
   else:
-    LSTM_units = model_size_info 
+    LSTM_units = model_size_info
 
   with tf.name_scope('LSTM-Layer'):
-    with tf.variable_scope("lstm"): 
-      lstmcell = tf.contrib.rnn.BasicLSTMCell(LSTM_units, forget_bias=1.0, 
+    with tf.variable_scope("lstm"):
+      lstmcell = tf.contrib.rnn.BasicLSTMCell(LSTM_units, forget_bias=1.0,
                    state_is_tuple=True)
-      _, last = tf.nn.dynamic_rnn(cell=lstmcell, inputs=fingerprint_4d, 
+      _, last = tf.nn.dynamic_rnn(cell=lstmcell, inputs=fingerprint_4d,
                   dtype=tf.float32)
       flow = last[-1]
 
   with tf.name_scope('Output-Layer'):
-    W_o = tf.get_variable('W_o', shape=[LSTM_units, num_classes], 
+    W_o = tf.get_variable('W_o', shape=[LSTM_units, num_classes],
             initializer=tf.contrib.layers.xavier_initializer())
     b_o = tf.get_variable('b_o', shape=[num_classes])
     logits = tf.matmul(flow, W_o) + b_o
@@ -1031,9 +1196,9 @@ def create_basic_lstm_model(fingerprint_input, model_settings, model_size_info,
   else:
     return logits
 
-def create_lstm_model(fingerprint_input, model_settings, model_size_info, 
+def create_lstm_model(fingerprint_input, model_settings, model_size_info,
                         is_training):
-  """Builds a model with a lstm layer (with output projection layer and 
+  """Builds a model with a lstm layer (with output projection layer and
        peep-hole connections)
   Based on model described in https://arxiv.org/abs/1705.02411
   model_size_info: [projection size, memory cells in LSTM]
@@ -1049,15 +1214,15 @@ def create_lstm_model(fingerprint_input, model_settings, model_size_info,
   projection_units = model_size_info[0]
   LSTM_units = model_size_info[1]
   with tf.name_scope('LSTM-Layer'):
-    with tf.variable_scope("lstm"): 
-      lstmcell = tf.contrib.rnn.LSTMCell(LSTM_units, use_peepholes=True, 
+    with tf.variable_scope("lstm"):
+      lstmcell = tf.contrib.rnn.LSTMCell(LSTM_units, use_peepholes=True,
                    num_proj=projection_units)
-      _, last = tf.nn.dynamic_rnn(cell=lstmcell, inputs=fingerprint_4d, 
+      _, last = tf.nn.dynamic_rnn(cell=lstmcell, inputs=fingerprint_4d,
                   dtype=tf.float32)
       flow = last[-1]
 
   with tf.name_scope('Output-Layer'):
-    W_o = tf.get_variable('W_o', shape=[projection_units, num_classes], 
+    W_o = tf.get_variable('W_o', shape=[projection_units, num_classes],
             initializer=tf.contrib.layers.xavier_initializer())
     b_o = tf.get_variable('b_o', shape=[num_classes])
     logits = tf.matmul(flow, W_o) + b_o
@@ -1128,7 +1293,7 @@ class LayerNormGRUCell(rnn_cell_impl.RNNCell):
 
       z, r = array_ops.split(value=concat, num_or_size_splits=2, axis=1)
       if self._layer_norm:
-        z = self._norm(z, "update") 
+        z = self._norm(z, "update")
         r = self._norm(r, "reset")
 
     with vs.variable_scope("candidate"):
@@ -1140,11 +1305,11 @@ class LayerNormGRUCell(rnn_cell_impl.RNNCell):
               (1 - math_ops.sigmoid(z)) * h
     return new_h, new_h
 
-def create_gru_model(fingerprint_input, model_settings, model_size_info, 
+def create_gru_model(fingerprint_input, model_settings, model_size_info,
                        is_training):
   """Builds a model with multi-layer GRUs
   model_size_info: [number of GRU layers, number of GRU cells per layer]
-  Optionally, the bi-directional GRUs and/or GRU with layer-normalization 
+  Optionally, the bi-directional GRUs and/or GRU with layer-normalization
     can be explored.
   """
   if is_training:
@@ -1174,20 +1339,20 @@ def create_gru_model(fingerprint_input, model_settings, model_size_info,
       gru_cell_fw.append(tf.contrib.rnn.GRUCell(gru_units))
       if bidirectional:
         gru_cell_bw.append(tf.contrib.rnn.GRUCell(gru_units))
-  
+
   if bidirectional:
     outputs, output_state_fw, output_state_bw = \
-      tf.contrib.rnn.stack_bidirectional_dynamic_rnn(gru_cell_fw, gru_cell_bw, 
+      tf.contrib.rnn.stack_bidirectional_dynamic_rnn(gru_cell_fw, gru_cell_bw,
       fingerprint_4d, dtype=tf.float32)
     flow = outputs[:, -1, :]
   else:
     cells = tf.contrib.rnn.MultiRNNCell(gru_cell_fw)
-    _, last = tf.nn.dynamic_rnn(cell=cells, inputs=fingerprint_4d, 
+    _, last = tf.nn.dynamic_rnn(cell=cells, inputs=fingerprint_4d,
                 dtype=tf.float32)
     flow = last[-1]
 
   with tf.name_scope('Output-Layer'):
-    W_o = tf.get_variable('W_o', shape=[flow.get_shape()[-1], num_classes], 
+    W_o = tf.get_variable('W_o', shape=[flow.get_shape()[-1], num_classes],
             initializer=tf.contrib.layers.xavier_initializer())
     b_o = tf.get_variable('b_o', shape=[num_classes])
     logits = tf.matmul(flow, W_o) + b_o
@@ -1196,7 +1361,7 @@ def create_gru_model(fingerprint_input, model_settings, model_size_info,
     return logits, dropout_prob
   else:
     return logits
-  
+
 
 def create_crnn_model(fingerprint_input, model_settings,
                                   model_size_info, is_training):
@@ -1205,7 +1370,7 @@ def create_crnn_model(fingerprint_input, model_settings,
   model_size_info: defines the following convolution layer parameters
       {number of conv features, conv filter height, width, stride in y,x dir.},
       followed by number of GRU layers and number of GRU cells per layer
-  Optionally, the bi-directional GRUs and/or GRU with layer-normalization 
+  Optionally, the bi-directional GRUs and/or GRU with layer-normalization
     can be explored.
   """
   if is_training:
@@ -1225,8 +1390,8 @@ def create_crnn_model(fingerprint_input, model_settings,
   first_filter_stride_y = model_size_info[3]
   first_filter_stride_x = model_size_info[4]
 
-  first_weights = tf.get_variable('W', shape=[first_filter_height, 
-                    first_filter_width, 1, first_filter_count], 
+  first_weights = tf.get_variable('W', shape=[first_filter_height,
+                    first_filter_width, 1, first_filter_count],
     initializer=tf.contrib.layers.xavier_initializer())
 
   first_bias = tf.Variable(tf.zeros([first_filter_count]))
@@ -1248,7 +1413,7 @@ def create_crnn_model(fingerprint_input, model_settings,
   # GRU part
   num_rnn_layers = model_size_info[5]
   RNN_units = model_size_info[6]
-  flow = tf.reshape(first_dropout, [-1, first_conv_output_height, 
+  flow = tf.reshape(first_dropout, [-1, first_conv_output_height,
            first_conv_output_width * first_filter_count])
   cell_fw = []
   cell_bw = []
@@ -1265,7 +1430,7 @@ def create_crnn_model(fingerprint_input, model_settings,
 
   if bidirectional:
     outputs, output_state_fw, output_state_bw = \
-      tf.contrib.rnn.stack_bidirectional_dynamic_rnn(cell_fw, cell_bw, flow, 
+      tf.contrib.rnn.stack_bidirectional_dynamic_rnn(cell_fw, cell_bw, flow,
       dtype=tf.float32)
     flow_dim = first_conv_output_height*RNN_units*2
     flow = tf.reshape(outputs, [-1, flow_dim])
@@ -1277,10 +1442,10 @@ def create_crnn_model(fingerprint_input, model_settings,
 
   first_fc_output_channels = model_size_info[7]
 
-  first_fc_weights = tf.get_variable('fcw', shape=[flow_dim, 
-    first_fc_output_channels], 
+  first_fc_weights = tf.get_variable('fcw', shape=[flow_dim,
+    first_fc_output_channels],
     initializer=tf.contrib.layers.xavier_initializer())
-  
+
   first_fc_bias = tf.Variable(tf.zeros([first_fc_output_channels]))
   first_fc = tf.nn.relu(tf.matmul(flow, first_fc_weights) + first_fc_bias)
   if is_training:
@@ -1289,11 +1454,11 @@ def create_crnn_model(fingerprint_input, model_settings,
     final_fc_input = first_fc
 
   label_count = model_settings['label_count']
-  
+
   final_fc_weights = tf.Variable(
       tf.truncated_normal(
           [first_fc_output_channels, label_count], stddev=0.01))
-  
+
   final_fc_bias = tf.Variable(tf.zeros([label_count]))
   final_fc = tf.matmul(final_fc_input, final_fc_weights) + final_fc_bias
   if is_training:
@@ -1301,16 +1466,16 @@ def create_crnn_model(fingerprint_input, model_settings,
   else:
     return final_fc
 
-def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info, 
+def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info,
                           is_training):
   """Builds a model with depthwise separable convolutional neural network
   Model definition is based on https://arxiv.org/abs/1704.04861 and
   Tensorflow implementation: https://github.com/Zehaos/MobileNet
 
   model_size_info: defines number of layers, followed by the DS-Conv layer
-    parameters in the order {number of conv features, conv filter height, 
-    width and stride in y,x dir.} for each of the layers. 
-  Note that first layer is always regular convolution, but the remaining 
+    parameters in the order {number of conv features, conv filter height,
+    width and stride in y,x dir.} for each of the layers.
+  Note that first layer is always regular convolution, but the remaining
     layers are all depthwise separable convolutions.
   """
 
@@ -1361,7 +1526,7 @@ def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info,
   input_time_size = model_settings['spectrogram_length']
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
- 
+
   t_dim = input_time_size
   f_dim = input_frequency_size
 
@@ -1419,4 +1584,3 @@ def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info,
     return logits, dropout_prob
   else:
     return logits
-
