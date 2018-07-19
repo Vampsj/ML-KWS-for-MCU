@@ -1,0 +1,590 @@
+2018-07-18 18:16:54.882228: I tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-07-18 18:16:55.007231: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:16:55.007578: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 0 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:01:00.0
+totalMemory: 10.91GiB freeMemory: 10.69GiB
+2018-07-18 18:16:55.096034: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:16:55.096368: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 1 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:02:00.0
+totalMemory: 10.91GiB freeMemory: 10.75GiB
+2018-07-18 18:16:55.097117: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1227] Device peer to peer matrix
+2018-07-18 18:16:55.097140: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1233] DMA: 0 1 
+2018-07-18 18:16:55.097146: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 0:   Y Y 
+2018-07-18 18:16:55.097150: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 1:   Y Y 
+2018-07-18 18:16:55.097156: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:16:55.443099: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10346 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:16:55.443910: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10407 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+2018-07-18 18:17:32.616869: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:17:32.617124: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10344 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:17:32.617380: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10405 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+WARNING:tensorflow:From train.py:156: softmax_cross_entropy_with_logits (from tensorflow.python.ops.nn_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+
+Future major versions of TensorFlow will allow gradients to flow
+into the labels input on backprop by default.
+
+See tf.nn.softmax_cross_entropy_with_logits_v2.
+
+INFO:tensorflow:Training from step: 1 
+Traceback (most recent call last):
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1361, in _do_call
+    return fn(*args)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1340, in _run_fn
+    target_list, status, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/errors_impl.py", line 516, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 237, in main
+    dropout_prob: 1.0
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 905, in run
+    run_metadata_ptr)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1137, in _run
+    feed_dict_tensor, options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1355, in _do_run
+    options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1374, in _do_call
+    raise type(e)(node_def, op, message)
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+Caused by op 'Reshape', defined at:
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 139, in main
+    is_training=True)
+  File "/home/vampsj/git/MyKWS/models.py", line 125, in create_model
+    model_size_info, is_training)
+  File "/home/vampsj/git/MyKWS/models.py", line 552, in create_low_latency_conv_model_tune
+    [-1, input_time_size, input_frequency_size, 1])
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/ops/gen_array_ops.py", line 3903, in reshape
+    "Reshape", tensor=tensor, shape=shape, name=name)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/op_def_library.py", line 787, in _apply_op_helper
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 3271, in create_op
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 1650, in __init__
+    self._traceback = self._graph._extract_stack()  # pylint: disable=protected-access
+
+InvalidArgumentError (see above for traceback): Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+2018-07-18 18:17:34.955358: I tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-07-18 18:17:35.048513: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:17:35.048847: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 0 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:01:00.0
+totalMemory: 10.91GiB freeMemory: 10.69GiB
+2018-07-18 18:17:35.121704: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:17:35.122038: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 1 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:02:00.0
+totalMemory: 10.91GiB freeMemory: 10.75GiB
+2018-07-18 18:17:35.122796: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1227] Device peer to peer matrix
+2018-07-18 18:17:35.122821: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1233] DMA: 0 1 
+2018-07-18 18:17:35.122827: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 0:   Y Y 
+2018-07-18 18:17:35.122831: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 1:   Y Y 
+2018-07-18 18:17:35.122841: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:17:35.464744: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10346 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:17:35.465527: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10407 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+2018-07-18 18:18:11.831262: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:18:11.831508: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10344 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:18:11.831761: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10405 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+WARNING:tensorflow:From train.py:156: softmax_cross_entropy_with_logits (from tensorflow.python.ops.nn_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+
+Future major versions of TensorFlow will allow gradients to flow
+into the labels input on backprop by default.
+
+See tf.nn.softmax_cross_entropy_with_logits_v2.
+
+INFO:tensorflow:Training from step: 1 
+Traceback (most recent call last):
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1361, in _do_call
+    return fn(*args)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1340, in _run_fn
+    target_list, status, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/errors_impl.py", line 516, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+	 [[Node: train/train_op/control_dependency/_75 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_633_train/train_op/control_dependency", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 237, in main
+    dropout_prob: 1.0
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 905, in run
+    run_metadata_ptr)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1137, in _run
+    feed_dict_tensor, options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1355, in _do_run
+    options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1374, in _do_call
+    raise type(e)(node_def, op, message)
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+	 [[Node: train/train_op/control_dependency/_75 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_633_train/train_op/control_dependency", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+
+Caused by op 'Reshape', defined at:
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 139, in main
+    is_training=True)
+  File "/home/vampsj/git/MyKWS/models.py", line 125, in create_model
+    model_size_info, is_training)
+  File "/home/vampsj/git/MyKWS/models.py", line 552, in create_low_latency_conv_model_tune
+    [-1, input_time_size, input_frequency_size, 1])
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/ops/gen_array_ops.py", line 3903, in reshape
+    "Reshape", tensor=tensor, shape=shape, name=name)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/op_def_library.py", line 787, in _apply_op_helper
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 3271, in create_op
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 1650, in __init__
+    self._traceback = self._graph._extract_stack()  # pylint: disable=protected-access
+
+InvalidArgumentError (see above for traceback): Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+	 [[Node: train/train_op/control_dependency/_75 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_633_train/train_op/control_dependency", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+
+2018-07-18 18:18:14.089246: I tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-07-18 18:18:14.179581: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:18:14.179917: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 0 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:01:00.0
+totalMemory: 10.91GiB freeMemory: 10.69GiB
+2018-07-18 18:18:14.250425: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:18:14.250759: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 1 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:02:00.0
+totalMemory: 10.91GiB freeMemory: 10.75GiB
+2018-07-18 18:18:14.251505: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1227] Device peer to peer matrix
+2018-07-18 18:18:14.251536: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1233] DMA: 0 1 
+2018-07-18 18:18:14.251543: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 0:   Y Y 
+2018-07-18 18:18:14.251547: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 1:   Y Y 
+2018-07-18 18:18:14.251553: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:18:14.593396: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10346 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:18:14.594191: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10407 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+2018-07-18 18:18:51.523527: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:18:51.523779: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10344 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:18:51.524032: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10405 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+WARNING:tensorflow:From train.py:156: softmax_cross_entropy_with_logits (from tensorflow.python.ops.nn_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+
+Future major versions of TensorFlow will allow gradients to flow
+into the labels input on backprop by default.
+
+See tf.nn.softmax_cross_entropy_with_logits_v2.
+
+INFO:tensorflow:Training from step: 1 
+Traceback (most recent call last):
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1361, in _do_call
+    return fn(*args)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1340, in _run_fn
+    target_list, status, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/errors_impl.py", line 516, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 288
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 237, in main
+    dropout_prob: 1.0
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 905, in run
+    run_metadata_ptr)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1137, in _run
+    feed_dict_tensor, options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1355, in _do_run
+    options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1374, in _do_call
+    raise type(e)(node_def, op, message)
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 288
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+Caused by op 'Reshape', defined at:
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 139, in main
+    is_training=True)
+  File "/home/vampsj/git/MyKWS/models.py", line 125, in create_model
+    model_size_info, is_training)
+  File "/home/vampsj/git/MyKWS/models.py", line 552, in create_low_latency_conv_model_tune
+    [-1, input_time_size, input_frequency_size, 1])
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/ops/gen_array_ops.py", line 3903, in reshape
+    "Reshape", tensor=tensor, shape=shape, name=name)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/op_def_library.py", line 787, in _apply_op_helper
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 3271, in create_op
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 1650, in __init__
+    self._traceback = self._graph._extract_stack()  # pylint: disable=protected-access
+
+InvalidArgumentError (see above for traceback): Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 288
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+2018-07-18 18:18:53.727864: I tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-07-18 18:18:53.818410: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:18:53.818744: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 0 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:01:00.0
+totalMemory: 10.91GiB freeMemory: 10.69GiB
+2018-07-18 18:18:53.890085: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:18:53.890424: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 1 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:02:00.0
+totalMemory: 10.91GiB freeMemory: 10.75GiB
+2018-07-18 18:18:53.891169: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1227] Device peer to peer matrix
+2018-07-18 18:18:53.891192: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1233] DMA: 0 1 
+2018-07-18 18:18:53.891199: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 0:   Y Y 
+2018-07-18 18:18:53.891203: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 1:   Y Y 
+2018-07-18 18:18:53.891210: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:18:54.234639: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10346 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:18:54.235448: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10407 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+2018-07-18 18:19:31.408640: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:19:31.408899: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10344 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:19:31.409150: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10405 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+WARNING:tensorflow:From train.py:156: softmax_cross_entropy_with_logits (from tensorflow.python.ops.nn_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+
+Future major versions of TensorFlow will allow gradients to flow
+into the labels input on backprop by default.
+
+See tf.nn.softmax_cross_entropy_with_logits_v2.
+
+INFO:tensorflow:Training from step: 1 
+Traceback (most recent call last):
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1361, in _do_call
+    return fn(*args)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1340, in _run_fn
+    target_list, status, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/errors_impl.py", line 516, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+	 [[Node: train/train_op/control_dependency/_75 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_633_train/train_op/control_dependency", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 237, in main
+    dropout_prob: 1.0
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 905, in run
+    run_metadata_ptr)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1137, in _run
+    feed_dict_tensor, options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1355, in _do_run
+    options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1374, in _do_call
+    raise type(e)(node_def, op, message)
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+	 [[Node: train/train_op/control_dependency/_75 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_633_train/train_op/control_dependency", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+
+Caused by op 'Reshape', defined at:
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 139, in main
+    is_training=True)
+  File "/home/vampsj/git/MyKWS/models.py", line 125, in create_model
+    model_size_info, is_training)
+  File "/home/vampsj/git/MyKWS/models.py", line 552, in create_low_latency_conv_model_tune
+    [-1, input_time_size, input_frequency_size, 1])
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/ops/gen_array_ops.py", line 3903, in reshape
+    "Reshape", tensor=tensor, shape=shape, name=name)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/op_def_library.py", line 787, in _apply_op_helper
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 3271, in create_op
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 1650, in __init__
+    self._traceback = self._graph._extract_stack()  # pylint: disable=protected-access
+
+InvalidArgumentError (see above for traceback): Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+	 [[Node: train/train_op/control_dependency/_75 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_633_train/train_op/control_dependency", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+
+2018-07-18 18:19:33.794039: I tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-07-18 18:19:33.883734: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:19:33.884068: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 0 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:01:00.0
+totalMemory: 10.91GiB freeMemory: 10.69GiB
+2018-07-18 18:19:33.952878: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:19:33.953228: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 1 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:02:00.0
+totalMemory: 10.91GiB freeMemory: 10.75GiB
+2018-07-18 18:19:33.953977: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1227] Device peer to peer matrix
+2018-07-18 18:19:33.954000: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1233] DMA: 0 1 
+2018-07-18 18:19:33.954006: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 0:   Y Y 
+2018-07-18 18:19:33.954010: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 1:   Y Y 
+2018-07-18 18:19:33.954019: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:19:34.296080: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10346 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:19:34.296884: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10407 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+2018-07-18 18:20:11.503143: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:20:11.503401: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10344 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:20:11.503651: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10405 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+WARNING:tensorflow:From train.py:156: softmax_cross_entropy_with_logits (from tensorflow.python.ops.nn_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+
+Future major versions of TensorFlow will allow gradients to flow
+into the labels input on backprop by default.
+
+See tf.nn.softmax_cross_entropy_with_logits_v2.
+
+INFO:tensorflow:Training from step: 1 
+Traceback (most recent call last):
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1361, in _do_call
+    return fn(*args)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1340, in _run_fn
+    target_list, status, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/errors_impl.py", line 516, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 237, in main
+    dropout_prob: 1.0
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 905, in run
+    run_metadata_ptr)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1137, in _run
+    feed_dict_tensor, options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1355, in _do_run
+    options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1374, in _do_call
+    raise type(e)(node_def, op, message)
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+Caused by op 'Reshape', defined at:
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 139, in main
+    is_training=True)
+  File "/home/vampsj/git/MyKWS/models.py", line 125, in create_model
+    model_size_info, is_training)
+  File "/home/vampsj/git/MyKWS/models.py", line 552, in create_low_latency_conv_model_tune
+    [-1, input_time_size, input_frequency_size, 1])
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/ops/gen_array_ops.py", line 3903, in reshape
+    "Reshape", tensor=tensor, shape=shape, name=name)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/op_def_library.py", line 787, in _apply_op_helper
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 3271, in create_op
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 1650, in __init__
+    self._traceback = self._graph._extract_stack()  # pylint: disable=protected-access
+
+InvalidArgumentError (see above for traceback): Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+2018-07-18 18:20:13.871946: I tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-07-18 18:20:13.971247: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:20:13.971579: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 0 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:01:00.0
+totalMemory: 10.91GiB freeMemory: 10.69GiB
+2018-07-18 18:20:14.040517: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:20:14.040849: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 1 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:02:00.0
+totalMemory: 10.91GiB freeMemory: 10.75GiB
+2018-07-18 18:20:14.041596: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1227] Device peer to peer matrix
+2018-07-18 18:20:14.041619: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1233] DMA: 0 1 
+2018-07-18 18:20:14.041625: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 0:   Y Y 
+2018-07-18 18:20:14.041630: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 1:   Y Y 
+2018-07-18 18:20:14.041636: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:20:14.382871: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10346 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:20:14.383687: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10407 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+2018-07-18 18:20:51.715290: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:20:51.715542: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10344 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:20:51.715795: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10405 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+WARNING:tensorflow:From train.py:156: softmax_cross_entropy_with_logits (from tensorflow.python.ops.nn_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+
+Future major versions of TensorFlow will allow gradients to flow
+into the labels input on backprop by default.
+
+See tf.nn.softmax_cross_entropy_with_logits_v2.
+
+INFO:tensorflow:Training from step: 1 
+Traceback (most recent call last):
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1361, in _do_call
+    return fn(*args)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1340, in _run_fn
+    target_list, status, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/errors_impl.py", line 516, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 237, in main
+    dropout_prob: 1.0
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 905, in run
+    run_metadata_ptr)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1137, in _run
+    feed_dict_tensor, options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1355, in _do_run
+    options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1374, in _do_call
+    raise type(e)(node_def, op, message)
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+Caused by op 'Reshape', defined at:
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 139, in main
+    is_training=True)
+  File "/home/vampsj/git/MyKWS/models.py", line 125, in create_model
+    model_size_info, is_training)
+  File "/home/vampsj/git/MyKWS/models.py", line 552, in create_low_latency_conv_model_tune
+    [-1, input_time_size, input_frequency_size, 1])
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/ops/gen_array_ops.py", line 3903, in reshape
+    "Reshape", tensor=tensor, shape=shape, name=name)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/op_def_library.py", line 787, in _apply_op_helper
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 3271, in create_op
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 1650, in __init__
+    self._traceback = self._graph._extract_stack()  # pylint: disable=protected-access
+
+InvalidArgumentError (see above for traceback): Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 240
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+
+2018-07-18 18:20:54.004039: I tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-07-18 18:20:54.094848: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:20:54.095200: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 0 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:01:00.0
+totalMemory: 10.91GiB freeMemory: 10.69GiB
+2018-07-18 18:20:54.164527: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:898] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-07-18 18:20:54.164860: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1212] Found device 1 with properties: 
+name: GeForce GTX 1080 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.6325
+pciBusID: 0000:02:00.0
+totalMemory: 10.91GiB freeMemory: 10.75GiB
+2018-07-18 18:20:54.165606: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1227] Device peer to peer matrix
+2018-07-18 18:20:54.165630: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1233] DMA: 0 1 
+2018-07-18 18:20:54.165636: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 0:   Y Y 
+2018-07-18 18:20:54.165640: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1243] 1:   Y Y 
+2018-07-18 18:20:54.165647: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:20:54.508458: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10346 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:20:54.509249: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10407 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+2018-07-18 18:21:32.021302: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1312] Adding visible gpu devices: 0, 1
+2018-07-18 18:21:32.021560: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10344 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1080 Ti, pci bus id: 0000:01:00.0, compute capability: 6.1)
+2018-07-18 18:21:32.021819: I tensorflow/core/common_runtime/gpu/gpu_device.cc:993] Creating TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10405 MB memory) -> physical GPU (device: 1, name: GeForce GTX 1080 Ti, pci bus id: 0000:02:00.0, compute capability: 6.1)
+WARNING:tensorflow:From train.py:156: softmax_cross_entropy_with_logits (from tensorflow.python.ops.nn_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+
+Future major versions of TensorFlow will allow gradients to flow
+into the labels input on backprop by default.
+
+See tf.nn.softmax_cross_entropy_with_logits_v2.
+
+INFO:tensorflow:Training from step: 1 
+Traceback (most recent call last):
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1361, in _do_call
+    return fn(*args)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1340, in _run_fn
+    target_list, status, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/errors_impl.py", line 516, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 288
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+	 [[Node: train/train_op/control_dependency/_75 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_633_train/train_op/control_dependency", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 237, in main
+    dropout_prob: 1.0
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 905, in run
+    run_metadata_ptr)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1137, in _run
+    feed_dict_tensor, options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1355, in _do_run
+    options, run_metadata)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/client/session.py", line 1374, in _do_call
+    raise type(e)(node_def, op, message)
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 288
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+	 [[Node: train/train_op/control_dependency/_75 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_633_train/train_op/control_dependency", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+
+Caused by op 'Reshape', defined at:
+  File "train.py", line 460, in <module>
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 126, in run
+    _sys.exit(main(argv))
+  File "train.py", line 139, in main
+    is_training=True)
+  File "/home/vampsj/git/MyKWS/models.py", line 125, in create_model
+    model_size_info, is_training)
+  File "/home/vampsj/git/MyKWS/models.py", line 552, in create_low_latency_conv_model_tune
+    [-1, input_time_size, input_frequency_size, 1])
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/ops/gen_array_ops.py", line 3903, in reshape
+    "Reshape", tensor=tensor, shape=shape, name=name)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/op_def_library.py", line 787, in _apply_op_helper
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 3271, in create_op
+    op_def=op_def)
+  File "/home/vampsj/git/deep-venv/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 1650, in __init__
+    self._traceback = self._graph._extract_stack()  # pylint: disable=protected-access
+
+InvalidArgumentError (see above for traceback): Input to reshape is a tensor with 392000 values, but the requested shape requires a multiple of 288
+	 [[Node: Reshape = Reshape[T=DT_FLOAT, Tshape=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](_arg_fingerprint_input_0_1/_45, Reshape/shape)]]
+	 [[Node: train/train_op/control_dependency/_75 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_633_train/train_op/control_dependency", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+
