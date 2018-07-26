@@ -1,0 +1,21 @@
+**** INPUT: Time and Frequency *****
+T * F:[20 * 36] 
+
+**** Filter Size AND Channel *****
+Size:[20 * 2], COUNT:145
+
+**** STRIDE INFO *****
+Size:[2 * 1]
+
+**** Count CONV Numbers ****
+5075
+******************
+First FC Size:[5075, 128]
+
+******************
+Second FC Size:[128, 128]
+
+******************
+Last FC Size:[128, 12]
+
+Total number of Parameters:  673733
