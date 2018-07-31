@@ -1,0 +1,4 @@
+layer number:3, size of W is 1200 * 144
+layer number:3, size of W is 144 * 144
+layer number:3, size of W is 144 * 144
+Total number of Parameters:  216444
